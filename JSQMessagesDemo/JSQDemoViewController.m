@@ -208,13 +208,6 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
      *  Reuse created bubble images, but create new imageView to add to each cell
      *  Otherwise, each cell would be referencing the same imageView and bubbles would disappear from cells
      */
-    if ([sender isEqualToString:self.sender]) {
-        return [[UIImageView alloc] initWithImage:self.outgoingBubbleImageView.image
-                                 highlightedImage:self.outgoingBubbleImageView.highlightedImage];
-    }
-    
-    return [[UIImageView alloc] initWithImage:self.incomingBubbleImageView.image
-                             highlightedImage:self.incomingBubbleImageView.highlightedImage];
 }
 
 - (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView sender:(NSString *)sender  avatarImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
