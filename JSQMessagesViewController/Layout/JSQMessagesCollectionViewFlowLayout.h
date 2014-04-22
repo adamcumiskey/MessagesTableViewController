@@ -49,6 +49,10 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault
 
 @property (assign, nonatomic) UIEdgeInsets messageBubbleTextViewTextContainerInsets;
 
+@property (assign, nonatomic) UIEdgeInsets messageBubbleImageViewFrameInsets;
+
+@property (assign, nonatomic) UIEdgeInsets messageBubbleImageViewContainerInsets;
+
 @property (assign, nonatomic) CGSize incomingAvatarViewSize;
 
 @property (assign, nonatomic) CGSize outgoingAvatarViewSize;

@@ -20,6 +20,8 @@
 
 #import "UIView+JSQMessages.h"
 
+#import <AFNetworking/UIImageView+AFNetworking.h>
+
 
 @interface JSQMessagesCollectionViewCell ()
 
@@ -28,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *cellBottomLabel;
 
 @property (weak, nonatomic) IBOutlet UITextView *textView;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @property (weak, nonatomic) IBOutlet UIView *messageBubbleContainerView;
 @property (weak, nonatomic) IBOutlet UIView *avatarContainerView;
@@ -36,6 +39,11 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBottomVerticalSpaceConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewAvatarHorizontalSpaceConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewMarginHorizontalSpaceConstraint;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewTopVerticalSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewBottomVerticalSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewAvatarHorizontalSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewMarginHorizontalSpaceConstraint;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cellTopLabelHeightContraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageBubbleTopLabelHeightContraint;
@@ -47,6 +55,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageBubbleLeftRightMarginConstraint;
 
 @property (assign, nonatomic) UIEdgeInsets textViewFrameInsets;
+@property (assign, nonatomic) UIEdgeInsets imageViewFrameInsets;
 
 @property (assign, nonatomic) CGSize avatarViewSize;
 
@@ -118,6 +127,7 @@
     self.cellBottomLabel.text = nil;
     
     self.textView.text = nil;
+    self.imageView.image = nil;
 }
 
 - (void)applyLayoutAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
@@ -130,6 +140,7 @@
     self.messageBubbleLeftRightMarginConstraint.constant = customAttributes.messageBubbleLeftRightMargin;
     self.textViewFrameInsets = customAttributes.textViewFrameInsets;
     self.textView.textContainerInset = customAttributes.textViewTextContainerInsets;
+    self.imageViewFrameInsets = customAttributes.imageViewFrameInsets;
     self.cellTopLabelHeightContraint.constant = customAttributes.cellTopLabelHeight;
     self.messageBubbleTopLabelHeightContraint.constant = customAttributes.messageBubbleTopLabelHeight;
     self.cellBottomLabelHeightContraint.constant = customAttributes.cellBottomLabelHeight;
@@ -209,6 +220,21 @@
     _avatarImageView = avatarImageView;
 }
 
+- (void)setImageViewFromURL:(NSURL *)url
+          completionHandler:(JSQImageRequestCompletionBlock)completionHandler
+{
+    [_imageView setImageWithURLRequest:[NSURLRequest requestWithURL:url]
+                      placeholderImage:nil
+                               success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                   [_imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
+                                   [self setNeedsUpdateConstraints];
+                                   completionHandler(YES, image, nil);
+                               }
+                               failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                   completionHandler(NO, nil, error);
+                               }];
+}
+
 - (void)setAvatarViewSize:(CGSize)avatarViewSize
 {
     self.avatarContainerViewWidthContraint.constant = avatarViewSize.width;
@@ -222,6 +248,15 @@
     self.textViewBottomVerticalSpaceConstraint.constant = textViewFrameInsets.bottom;
     self.textViewAvatarHorizontalSpaceConstraint.constant = textViewFrameInsets.right;
     self.textViewMarginHorizontalSpaceConstraint.constant = textViewFrameInsets.left;
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)setImageViewFrameInsets:(UIEdgeInsets)imageViewFrameInsets
+{
+    self.imageViewTopVerticalSpaceConstraint.constant = imageViewFrameInsets.top;
+    self.imageViewBottomVerticalSpaceConstraint.constant = imageViewFrameInsets.bottom;
+    self.imageViewAvatarHorizontalSpaceConstraint.constant = imageViewFrameInsets.right;
+    self.imageViewMarginHorizontalSpaceConstraint.constant = imageViewFrameInsets.left;
     [self setNeedsUpdateConstraints];
 }
 
@@ -239,6 +274,14 @@
                             self.textViewMarginHorizontalSpaceConstraint.constant,
                             self.textViewBottomVerticalSpaceConstraint.constant,
                             self.textViewAvatarHorizontalSpaceConstraint.constant);
+}
+
+- (UIEdgeInsets)imageViewFrameInsets
+{
+    return UIEdgeInsetsMake(self.imageViewTopVerticalSpaceConstraint.constant,
+                            self.imageViewMarginHorizontalSpaceConstraint.constant,
+                            self.imageViewBottomVerticalSpaceConstraint.constant,
+                            self.imageViewAvatarHorizontalSpaceConstraint.constant);
 }
 
 @end

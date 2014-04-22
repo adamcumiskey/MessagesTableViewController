@@ -16,6 +16,7 @@
 
 #import "JSQMessagesLabel.h"
 
+typedef void (^JSQImageRequestCompletionBlock)(BOOL success, UIImage *image, NSError *error);
 
 @interface JSQMessagesCollectionViewCell : UICollectionViewCell
 
@@ -24,6 +25,7 @@
 @property (weak, nonatomic, readonly) JSQMessagesLabel *cellBottomLabel;
 
 @property (weak, nonatomic, readonly) UITextView *textView;
+@property (weak, nonatomic, readonly) UIImageView *imageView;
 
 @property (weak, nonatomic) UIImageView *messageBubbleImageView;
 @property (weak, nonatomic) UIImageView *avatarImageView;
@@ -33,5 +35,10 @@
 + (UINib *)nib;
 
 + (NSString *)cellReuseIdentifier;
+
+#pragma mark - Instace methods
+
+- (void)setImageFromURL:(NSURL *)url
+      completionHandler:(JSQImageRequestCompletionBlock)completionHandler;
 
 @end

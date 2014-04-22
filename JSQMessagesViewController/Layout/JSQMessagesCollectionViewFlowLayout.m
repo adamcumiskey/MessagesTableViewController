@@ -79,6 +79,7 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     self.messageBubbleLeftRightMargin = 40.0f;
     self.messageBubbleTextViewFrameInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 6.0f);
     self.messageBubbleTextViewTextContainerInsets = UIEdgeInsetsMake(10.0f, 8.0f, 10.0f, 8.0f);
+    self.messageBubbleImageViewFrameInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 6.0f);
     
     CGSize defaultAvatarSize = CGSizeMake(34.0f, 34.0f);
     self.incomingAvatarViewSize = defaultAvatarSize;
@@ -306,8 +307,14 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     
     CGSize stringSize = CGRectIntegral(stringRect).size;
     
+    CGSize imageSize = CGSizeZero;
+    if ([messageData hasMedia]) {
+        imageSize = [[messageData image] size];
+    }
+    
     CGSize finalSize = CGSizeMake(stringSize.width,
-                                  stringSize.height + self.messageBubbleTextViewTextContainerInsets.top
+                                  stringSize.height + imageSize.height
+                                                    + self.messageBubbleTextViewTextContainerInsets.top
                                                     + self.messageBubbleTextViewTextContainerInsets.bottom);
     
     [self.messageBubbleSizes setObject:[NSValue valueWithCGSize:finalSize] forKey:indexPath];
@@ -329,6 +336,8 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     
     layoutAttributes.textViewTextContainerInsets = self.messageBubbleTextViewTextContainerInsets;
     
+    layoutAttributes.imageViewFrameInsets = self.messageBubbleImageViewFrameInsets;
+        
     layoutAttributes.messageBubbleFont = self.messageBubbleFont;
     
     layoutAttributes.incomingAvatarViewSize = self.incomingAvatarViewSize;

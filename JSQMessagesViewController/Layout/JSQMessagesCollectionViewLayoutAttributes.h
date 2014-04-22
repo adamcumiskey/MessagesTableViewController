@@ -25,6 +25,8 @@
 
 @property (assign, nonatomic) UIEdgeInsets textViewFrameInsets;
 
+@property (assign, nonatomic) UIEdgeInsets imageViewFrameInsets;
+
 @property (assign, nonatomic) CGSize incomingAvatarViewSize;
 
 @property (assign, nonatomic) CGSize outgoingAvatarViewSize;

@@ -38,4 +38,26 @@
  */
 - (NSDate *)date;
 
+@optional
+
+/**
+ *  @return The bool indicating whether the message has an attachment
+ */
+- (BOOL)hasMedia;
+
+/** 
+ * @return The URL where the media can be found
+ */
+- (NSURL *)mediaURL;
+
+/**
+ * @return The image retrieved from the URL
+ */
+- (UIImage *)image;
+
+/**
+ *  Sets the image so that the Collection View Layout can use it to calulate its size
+ */
+- (void)setImage:(UIImage *)image;
+
 @end

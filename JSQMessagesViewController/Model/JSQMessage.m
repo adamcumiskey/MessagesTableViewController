@@ -20,18 +20,20 @@
 
 + (instancetype)messageWithText:(NSString *)text sender:(NSString *)sender
 {
-    return [[JSQMessage alloc] initWithText:text sender:sender date:[NSDate date]];
+    return [[JSQMessage alloc] initWithText:text sender:sender date:[NSDate date] mediaURL:nil];
 }
 
 - (instancetype)initWithText:(NSString *)text
                       sender:(NSString *)sender
                         date:(NSDate *)date
+                    mediaURL:(NSURL *)mediaURL
 {
     self = [super init];
     if (self) {
         _text = text ? text : @" ";
         _sender = sender;
         _date = date;
+        _mediaURL = mediaURL;
     }
     return self;
 }
@@ -41,6 +43,16 @@
     _text = nil;
     _sender = nil;
     _date = nil;
+    _mediaURL = nil;
+}
+
+#pragma mark - JSQMessageData
+- (BOOL)hasMedia
+{
+    if (self.mediaURL) {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - NSObject
@@ -59,6 +71,7 @@
         _text = [aDecoder decodeObjectForKey:@"text"];
         _sender = [aDecoder decodeObjectForKey:@"sender"];
         _date = [aDecoder decodeObjectForKey:@"date"];
+        _mediaURL = [aDecoder decodeObjectForKey:@"mediaURL"];
     }
     return self;
 }
@@ -68,6 +81,7 @@
     [aCoder encodeObject:self.text forKey:@"text"];
     [aCoder encodeObject:self.sender forKey:@"sender"];
     [aCoder encodeObject:self.date forKey:@"date"];
+    [aCoder encodeObject:self.mediaURL forKey:@"mediaURL"];
 }
 
 #pragma mark - NSCopying
@@ -76,7 +90,8 @@
 {
     return [[[self class] allocWithZone:zone] initWithText:[self.text copy]
                                                     sender:[self.sender copy]
-                                                      date:[self.date copy]];
+                                                      date:[self.date copy]
+                                                  mediaURL:[self.mediaURL copy]];
 }
 
 @end

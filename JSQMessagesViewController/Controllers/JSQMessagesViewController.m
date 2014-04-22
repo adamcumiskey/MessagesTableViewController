@@ -30,6 +30,8 @@
 
 #import "NSString+JSQMessages.h"
 
+#import <AFNetworking/UIImageView+AFNetworking.h>
+
 
 static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObservingContext;
 
@@ -329,6 +331,13 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     NSAssert(messageText, @"ERROR: messageData text must not be nil");
     
     cell.textView.text = messageText;
+    
+    if ([messageData hasMedia]) {
+        [cell setImageFromURL:[messageData mediaURL]
+            completionHandler:^(BOOL success, UIImage *image, NSError *error) {
+                [messageData setImage:image];
+            }];
+    }
     
     cell.messageBubbleImageView = [collectionView.dataSource collectionView:collectionView
                                                                      sender:messageSender bubbleImageViewForItemAtIndexPath:indexPath];
