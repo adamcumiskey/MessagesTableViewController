@@ -38,7 +38,7 @@ typedef void (^JSQImageRequestCompletionBlock)(BOOL success, UIImage *image, NSE
 
 #pragma mark - Instace methods
 
-- (void)setImageFromURL:(NSURL *)url
-      completionHandler:(JSQImageRequestCompletionBlock)completionHandler;
+- (void)setImageViewFromURL:(NSURL *)url
+          completionHandler:(JSQImageRequestCompletionBlock)completionHandler;
 
 @end

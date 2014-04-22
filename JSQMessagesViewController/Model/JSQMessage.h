@@ -36,16 +36,6 @@
  */
 @property (copy, nonatomic) NSDate *date;
 
-/**
- *  The URL pointing to any attached media
- */
-@property (copy, nonatomic) NSURL *mediaURL;
-
-/**
- *  Image from the URL
- */
-@property (copy, nonatomic) UIImage *image;
-
 #pragma mark - Initialization
 
 /**
@@ -64,13 +54,11 @@
  *  @param text   The body text of the message.
  *  @param sender The name of the user who sent the message.
  *  @param date   The date that the message was sent.
- *  @param mediaURL The URL of the media
  *
  *  @return An initialized `JSQMessage` object or `nil` if the object could not be successfully initialized.
  */
 - (instancetype)initWithText:(NSString *)text
                       sender:(NSString *)sender
-                        date:(NSDate *)date
-                    mediaURL:(NSURL *)mediaURL;
+                        date:(NSDate *)date;
 
 @end

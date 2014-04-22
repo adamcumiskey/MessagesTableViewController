@@ -287,10 +287,10 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 
 - (CGSize)messageBubbleSizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSValue *cachedSize = [self.messageBubbleSizes objectForKey:indexPath];
-    if (cachedSize) {
-        return [cachedSize CGSizeValue];
-    }
+//    NSValue *cachedSize = [self.messageBubbleSizes objectForKey:indexPath];
+//    if (cachedSize) {
+//        return [cachedSize CGSizeValue];
+//    }
     
     id<JSQMessageData> messageData = [self.collectionView.dataSource collectionView:self.collectionView messageDataForItemAtIndexPath:indexPath];
     
@@ -307,15 +307,26 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     
     CGSize stringSize = CGRectIntegral(stringRect).size;
     
-    CGSize imageSize = CGSizeZero;
-    if ([messageData hasMedia]) {
-        imageSize = [[messageData image] size];
+    CGSize finalSize = CGSizeZero;
+    if ([messageData image]) {
+        CGSize imageSize = [[messageData image] size];
+        if (imageSize.width > maximumTextWidth) {
+            imageSize.height = imageSize.height * (maximumTextWidth/imageSize.width);
+            imageSize.width = maximumTextWidth;
+        }
+        
+        CGFloat finalWidth = (stringSize.width > imageSize.width) ? stringSize.width : imageSize.width;
+        
+        finalSize = CGSizeMake(finalWidth,
+                               stringSize.height + imageSize.height
+                               + self.messageBubbleTextViewTextContainerInsets.top
+                               + self.messageBubbleTextViewTextContainerInsets.bottom);
+    } else {
+        finalSize = CGSizeMake(stringSize.width,
+                               stringSize.height
+                               + self.messageBubbleTextViewTextContainerInsets.top
+                               + self.messageBubbleTextViewTextContainerInsets.bottom);
     }
-    
-    CGSize finalSize = CGSizeMake(stringSize.width,
-                                  stringSize.height + imageSize.height
-                                                    + self.messageBubbleTextViewTextContainerInsets.top
-                                                    + self.messageBubbleTextViewTextContainerInsets.bottom);
     
     [self.messageBubbleSizes setObject:[NSValue valueWithCGSize:finalSize] forKey:indexPath];
     return finalSize;

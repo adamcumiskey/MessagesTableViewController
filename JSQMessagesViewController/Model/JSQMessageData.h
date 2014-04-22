@@ -46,9 +46,9 @@
 - (BOOL)hasMedia;
 
 /** 
- * @return The URL where the media can be found
+ * @return The URL where the media image can be found
  */
-- (NSURL *)mediaURL;
+- (NSURL *)imageURL;
 
 /**
  * @return The image retrieved from the URL

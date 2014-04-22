@@ -332,11 +332,20 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     
     cell.textView.text = messageText;
     
-    if ([messageData hasMedia]) {
-        [cell setImageFromURL:[messageData mediaURL]
-            completionHandler:^(BOOL success, UIImage *image, NSError *error) {
-                [messageData setImage:image];
-            }];
+    if ([messageData imageURL]) {
+        if ([messageData image]) {
+            [cell.imageView setImage:[messageData image]];
+            [self.collectionView.collectionViewLayout invalidateLayout];
+        } else {
+            [cell setImageViewFromURL:[messageData imageURL]
+                    completionHandler:^(BOOL success, UIImage *image, NSError *error) {
+                        if (success) {
+                            [messageData setImage:image];
+                            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                            [self.collectionView.collectionViewLayout invalidateLayout];
+                        }
+                    }];
+        }
     }
     
     cell.messageBubbleImageView = [collectionView.dataSource collectionView:collectionView
