@@ -18,6 +18,7 @@
 
 #import "NSString+JSQMessages.h"
 
+
 @interface JSQMessagesComposerTextView ()
 
 - (void)jsq_addTextViewNotificationObservers;
@@ -76,6 +77,8 @@
 - (void)dealloc
 {
     [self jsq_removeTextViewNotificationObservers];
+    _placeHolder = nil;
+    _placeHolderTextColor = nil;
 }
 
 #pragma mark - Composer text view

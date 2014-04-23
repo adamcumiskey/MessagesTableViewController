@@ -62,6 +62,10 @@ typedef void (^JSQAnimationCompletionBlock)(BOOL finished);
                         delegate:(id<JSQMessagesKeyboardControllerDelegate>)delegate
 
 {
+    NSAssert(textView, @"ERROR: textView must not be nil: %s", __PRETTY_FUNCTION__);
+    NSAssert(contextView, @"ERROR: contextView must not be nil: %s", __PRETTY_FUNCTION__);
+    NSAssert(panGestureRecognizer, @"ERROR: panGestureRecognizer must not be nil: %s", __PRETTY_FUNCTION__);
+    
     self = [super init];
     if (self) {
         _textView = textView;
@@ -119,6 +123,8 @@ typedef void (^JSQAnimationCompletionBlock)(BOOL finished);
 
 - (void)jsq_registerForNotifications
 {
+    [self jsq_unregisterForNotifications];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(jsq_didReceiveKeyboardDidShowNotification:)
                                                  name:UIKeyboardDidShowNotification
@@ -250,8 +256,13 @@ typedef void (^JSQAnimationCompletionBlock)(BOOL finished);
     
     CGFloat contextViewHeight = CGRectGetHeight(self.contextView.frame);
     CGFloat keyboardViewHeight = CGRectGetHeight(self.keyboardView.frame);
+    CGFloat dragThresholdY = (contextViewHeight - keyboardViewHeight - self.keyboardTriggerPoint.y);
     
     CGRect newKeyboardViewFrame = self.keyboardView.frame;
+    
+    BOOL userIsDraggingNearThresholdForDismissing = (touch.y > dragThresholdY);
+    
+    self.keyboardView.userInteractionEnabled = !userIsDraggingNearThresholdForDismissing;
     
     switch (pan.state) {
         case UIGestureRecognizerStateChanged:
@@ -280,8 +291,14 @@ typedef void (^JSQAnimationCompletionBlock)(BOOL finished);
         case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateFailed:
         {
+            BOOL keyboardViewIsHidden = (CGRectGetMinY(self.keyboardView.frame) >= CGRectGetMaxY([UIScreen mainScreen].bounds));
+            if (keyboardViewIsHidden) {
+                return;
+            }
+            
             CGPoint velocity = [pan velocityInView:self.contextView];
-            BOOL shouldHide = (velocity.y > 0.0f);
+            BOOL userIsScrollingDown = (velocity.y > 0.0f);
+            BOOL shouldHide = (userIsScrollingDown && userIsDraggingNearThresholdForDismissing);
             
             newKeyboardViewFrame.origin.y = shouldHide ? contextViewHeight : (contextViewHeight - keyboardViewHeight);
             
@@ -292,6 +309,8 @@ typedef void (^JSQAnimationCompletionBlock)(BOOL finished);
                                  self.keyboardView.frame = newKeyboardViewFrame;
                              }
                              completion:^(BOOL finished) {
+                                 self.keyboardView.userInteractionEnabled = !shouldHide;
+                                 
                                  if (shouldHide) {
                                      [self jsq_setKeyboardViewHidden:YES];
                                      [self jsq_removeKeyboardFrameObserver];

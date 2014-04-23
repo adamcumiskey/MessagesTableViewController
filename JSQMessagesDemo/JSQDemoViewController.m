@@ -156,19 +156,23 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
 
 - (void)receiveMessagePressed:(UIBarButtonItem *)sender
 {
-    JSQMessage *copyMessage = [[self.messages lastObject] copy];
+    self.showTypingIndicator = !self.showTypingIndicator;
     
-    if (!copyMessage) {
-        return;
-    }
-    
-    NSMutableArray *copyAvatars = [[self.avatars allKeys] mutableCopy];
-    [copyAvatars removeObject:self.sender];
-    copyMessage.sender = [copyAvatars objectAtIndex:arc4random_uniform((int)[copyAvatars count])];
-    
-    [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-    [self.messages addObject:copyMessage];
-    [self finishSending];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        JSQMessage *copyMessage = [[self.messages lastObject] copy];
+        
+        if (!copyMessage) {
+            return;
+        }
+        
+        NSMutableArray *copyAvatars = [[self.avatars allKeys] mutableCopy];
+        [copyAvatars removeObject:self.sender];
+        copyMessage.sender = [copyAvatars objectAtIndex:arc4random_uniform((int)[copyAvatars count])];
+        
+        [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+        [self.messages addObject:copyMessage];
+        [self finishSending];
+    });
 }
 
 - (void)closePressed:(UIBarButtonItem *)sender
@@ -202,7 +206,7 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
     return [self.messages objectAtIndex:indexPath.row];
 }
 
-- (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView sender:(NSString *)sender  bubbleImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
+- (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView sender:(NSString *)sender bubbleImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     /**
      *  Reuse created bubble images, but create new imageView to add to each cell
@@ -210,7 +214,7 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
      */
 }
 
-- (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView sender:(NSString *)sender  avatarImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
+- (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView sender:(NSString *)sender avatarImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     /**
      *  Reuse created avatar images, but create new imageView to add to each cell
