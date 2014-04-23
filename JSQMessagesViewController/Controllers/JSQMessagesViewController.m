@@ -335,14 +335,13 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     if ([messageData imageURL]) {
         if ([messageData image]) {
             [cell.imageView setImage:[messageData image]];
+            [cell.imageView setNeedsDisplay];
             [self.collectionView.collectionViewLayout invalidateLayout];
         } else {
             [cell setImageViewFromURL:[messageData imageURL]
                     completionHandler:^(BOOL success, UIImage *image, NSError *error) {
                         if (success) {
                             [messageData setImage:image];
-                            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                            [self.collectionView.collectionViewLayout invalidateLayout];
                         }
                     }];
         }
