@@ -16,8 +16,6 @@
 
 #import "JSQMessagesLabel.h"
 
-typedef void (^JSQImageRequestCompletionBlock)(BOOL success, UIImage *image, NSError *error);
-
 @class JSQMessagesCollectionViewCell;
 
 /**
@@ -40,7 +38,7 @@ typedef void (^JSQImageRequestCompletionBlock)(BOOL success, UIImage *image, NSE
 
 /**
  *  The `JSQMessagesCollectionViewCell` is an abstract class that presents the content for a single message data item
- *  when that item is within the collection view’s visible bounds. The layout and presentation 
+ *  when that item is within the collection view’s visible bounds. The layout and presentation
  *  of cells is managed by the collection view and its corresponding layout object.
  */
 @interface JSQMessagesCollectionViewCell : UICollectionViewCell
@@ -71,8 +69,7 @@ typedef void (^JSQImageRequestCompletionBlock)(BOOL success, UIImage *image, NSE
 /**
  *  Returns the text view of the cell. This text view contains the message body text.
  */
-@property (weak, nonatomic, readonly) UITextView *textView;
-@property (weak, nonatomic, readonly) UIImageView *imageView;
+@property (weak, nonatomic, readonly) UIView *contentView;
 
 /**
  *  The bubble image view of the cell that is responsible for displaying bubble images.
@@ -104,7 +101,7 @@ typedef void (^JSQImageRequestCompletionBlock)(BOOL success, UIImage *image, NSE
 /**
  *  Returns the `UINib` object initialized for the cell.
  *
- *  @return The initialized `UINib` object or `nil` if there were errors during 
+ *  @return The initialized `UINib` object or `nil` if there were errors during
  *  initialization or the nib file could not be located.
  */
 + (UINib *)nib;
@@ -115,10 +112,5 @@ typedef void (^JSQImageRequestCompletionBlock)(BOOL success, UIImage *image, NSE
  *  @return The string used to identify a reusable cell.
  */
 + (NSString *)cellReuseIdentifier;
-
-#pragma mark - Instace methods
-
-- (void)setImageViewFromURL:(NSURL *)url
-          completionHandler:(JSQImageRequestCompletionBlock)completionHandler;
 
 @end

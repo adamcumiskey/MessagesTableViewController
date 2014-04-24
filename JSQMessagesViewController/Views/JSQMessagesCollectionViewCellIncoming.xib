@@ -40,34 +40,19 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYU-B8-cUW">
-                                <rect key="frame" x="6" y="0.0" width="238" height="44"/>
+                                <rect key="frame" x="6" y="0.0" width="238" height="94"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="7C6-eN-nfW"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qha-Ws-Yw7">
-                                <rect key="frame" x="6" y="47" width="238" height="47"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="238" id="gAz-e1-49G"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="qha-Ws-Yw7" firstAttribute="top" secondItem="KYU-B8-cUW" secondAttribute="bottom" constant="3" id="8J8-2L-Gh1"/>
-                            <constraint firstItem="qha-Ws-Yw7" firstAttribute="leading" secondItem="btS-p8-B7Z" secondAttribute="leading" constant="6" id="8d7-kO-v4n"/>
-                            <constraint firstItem="KYU-B8-cUW" firstAttribute="leading" secondItem="btS-p8-B7Z" secondAttribute="leading" constant="6" id="8r2-am-rxz"/>
-                            <constraint firstAttribute="trailing" secondItem="KYU-B8-cUW" secondAttribute="trailing" id="HRX-E8-1ei"/>
-                            <constraint firstItem="KYU-B8-cUW" firstAttribute="leading" secondItem="qha-Ws-Yw7" secondAttribute="leading" id="KKd-iY-2m0"/>
-                            <constraint firstItem="qha-Ws-Yw7" firstAttribute="top" secondItem="KYU-B8-cUW" secondAttribute="bottom" constant="3" id="gJA-ab-Ui2"/>
-                            <constraint firstItem="KYU-B8-cUW" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="top" id="jVo-zl-P9b"/>
-                            <constraint firstAttribute="trailing" secondItem="qha-Ws-Yw7" secondAttribute="trailing" id="kuM-vB-F5I"/>
-                            <constraint firstAttribute="bottom" secondItem="qha-Ws-Yw7" secondAttribute="bottom" id="yg6-4a-Fqu"/>
+                            <constraint firstAttribute="bottom" secondItem="KYU-B8-cUW" secondAttribute="bottom" id="2ZT-Ms-94b"/>
+                            <constraint firstItem="KYU-B8-cUW" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="top" id="56B-30-BSi"/>
+                            <constraint firstItem="KYU-B8-cUW" firstAttribute="leading" secondItem="btS-p8-B7Z" secondAttribute="leading" constant="6" id="Wm8-lJ-qOt"/>
+                            <constraint firstAttribute="trailing" secondItem="KYU-B8-cUW" secondAttribute="trailing" id="raV-Yb-s3t"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Da1-09-wR4">
@@ -122,20 +107,16 @@
                 <outlet property="cellBottomLabelHeightContraint" destination="xPR-Ph-Ze9" id="FrY-vY-MM0"/>
                 <outlet property="cellTopLabel" destination="afj-rd-iNv" id="bTd-4q-U7e"/>
                 <outlet property="cellTopLabelHeightContraint" destination="fKS-MR-YPI" id="Sab-Ev-pSi"/>
-                <outlet property="imageView" destination="qha-Ws-Yw7" id="6Em-40-LKn"/>
-                <outlet property="imageViewAvatarHorizontalSpaceConstraint" destination="8d7-kO-v4n" id="zym-x3-VVe"/>
-                <outlet property="imageViewBottomVerticalSpaceConstraint" destination="yg6-4a-Fqu" id="jvy-di-EFm"/>
-                <outlet property="imageViewMarginHorizontalSpaceConstraint" destination="kuM-vB-F5I" id="pKZ-6t-pB8"/>
-                <outlet property="imageViewTopVerticalSpaceConstraint" destination="gJA-ab-Ui2" id="UmK-U4-rZy"/>
+                <outlet property="contentView" destination="KYU-B8-cUW" id="23q-i8-sYV"/>
+                <outlet property="contentViewAvatarHorizontalSpaceConstraint" destination="Wm8-lJ-qOt" id="g55-Ss-oaf"/>
+                <outlet property="contentViewBottomVerticalSpaceConstraint" destination="56B-30-BSi" id="jhg-u5-UlC"/>
+                <outlet property="contentViewMarginHorizontalSpaceConstraint" destination="raV-Yb-s3t" id="4Of-fA-jzu"/>
+                <outlet property="contentViewTopVerticalSpaceConstraint" destination="2ZT-Ms-94b" id="Tey-zq-N6b"/>
                 <outlet property="messageBubbleContainerView" destination="btS-p8-B7Z" id="2sk-5p-NEd"/>
                 <outlet property="messageBubbleLeftRightMarginConstraint" destination="k2n-jk-kOg" id="DoB-EE-Ka1"/>
                 <outlet property="messageBubbleTopLabel" destination="Ufa-bF-l1Y" id="VtH-te-blR"/>
                 <outlet property="messageBubbleTopLabelHeightContraint" destination="fal-sy-hrK" id="BDy-BF-MYD"/>
                 <outlet property="textView" destination="KYU-B8-cUW" id="1Yv-ln-EUZ"/>
-                <outlet property="textViewAvatarHorizontalSpaceConstraint" destination="8r2-am-rxz" id="1bW-bP-A6j"/>
-                <outlet property="textViewBottomVerticalSpaceConstraint" destination="8J8-2L-Gh1" id="z46-oF-hUg"/>
-                <outlet property="textViewMarginHorizontalSpaceConstraint" destination="HRX-E8-1ei" id="XQ2-TD-OxB"/>
-                <outlet property="textViewTopVerticalSpaceConstraint" destination="jVo-zl-P9b" id="pAL-Wt-bnn"/>
             </connections>
         </collectionViewCell>
     </objects>

@@ -21,6 +21,8 @@
 
 #import "JSQMessagesCollectionViewCellIncoming.h"
 #import "JSQMessagesCollectionViewCellOutgoing.h"
+#import "JSQMessagesCollectionViewImageCellIncoming.h"
+#import "JSQMessagesCollectionViewImageCellOutgoing.h"
 #import "JSQMessagesTypingIndicatorFooterView.h"
 
 #import "JSQMessagesToolbarContentView.h"
@@ -120,6 +122,8 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     
     self.outgoingCellIdentifier = [JSQMessagesCollectionViewCellOutgoing cellReuseIdentifier];
     self.incomingCellIdentifier = [JSQMessagesCollectionViewCellIncoming cellReuseIdentifier];
+    self.outgoingImageCellIdentifier = [JSQMessagesCollectionViewImageCellOutgoing cellReuseIdentifier];
+    self.incomingImageCellIdentifier = [JSQMessagesCollectionViewImageCellIncoming cellReuseIdentifier];
     
     self.typingIndicatorColor = [UIColor jsq_messageBubbleLightGrayColor];
     self.showTypingIndicator = NO;
@@ -363,28 +367,35 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     NSAssert(messageSender, @"ERROR: messageData sender must not be nil: %s", __PRETTY_FUNCTION__);
     
     BOOL isOutgoingMessage = [messageSender isEqualToString:self.sender];
-    
-    NSString *cellIdentifier = isOutgoingMessage ? self.outgoingCellIdentifier : self.incomingCellIdentifier;
-    JSQMessagesCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-    cell.delegate = self;
+    BOOL isImageMessage = [messageData image];
     
     NSString *messageText = [messageData text];
     NSAssert(messageText, @"ERROR: messageData text must not be nil: %s", __PRETTY_FUNCTION__);
     
-    cell.textView.text = messageText;
+    NSString *cellIdentifier;
+    if (isImageMessage) {
+        cellIdentifier = isOutgoingMessage ? self.outgoingImageCellIdentifier : self.incomingImageCellIdentifier;
+    } else {
+        cellIdentifier = isOutgoingMessage ? self.outgoingCellIdentifier : self.incomingCellIdentifier;
+    }
     
-    if ([messageData imageURL]) {
-        if ([messageData image]) {
-            [cell.imageView setImage:[messageData image]];
-            [cell.imageView setNeedsDisplay];
-            [self.collectionView.collectionViewLayout invalidateLayout];
-        } else {
-            [cell setImageViewFromURL:[messageData imageURL]
-                    completionHandler:^(BOOL success, UIImage *image, NSError *error) {
-                        if (success) {
-                            [messageData setImage:image];
-                        }
-                    }];
+    JSQMessagesCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier
+                                                                                    forIndexPath:indexPath];
+    cell.delegate = self;
+    
+    if ([messageData image]) {
+        if ([cell respondsToSelector:@selector(imageView)]) {
+            UIImageView *imageView = [cell performSelector:@selector(imageView)];
+            [imageView setImage:[messageData image]];
+        }
+    } else {
+        if ([cell respondsToSelector:@selector(textView)]) {
+            UITextView *textView = [cell performSelector:@selector(textView)];
+            textView.text = messageText;
+            textView.dataDetectorTypes = UIDataDetectorTypeAll;
+            if (!isOutgoingMessage) {
+                textView.textColor = [UIColor blackColor];
+            }
         }
     }
     
@@ -403,19 +414,17 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     cell.cellBottomLabel.attributedText = [collectionView.dataSource collectionView:collectionView
                                                                              sender:messageSender attributedTextForCellBottomLabelAtIndexPath:indexPath];
     
-    cell.backgroundColor = [UIColor clearColor];
-    
     CGFloat bubbleTopLabelInset = 60.0f;
     
     if (isOutgoingMessage) {
         cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, bubbleTopLabelInset);
     }
     else {
-        cell.textView.textColor = [UIColor blackColor];
         cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, bubbleTopLabelInset, 0.0f, 0.0f);
     }
     
-    cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
+    cell.backgroundColor = [UIColor clearColor];
+    
     
     return cell;
 }
@@ -451,7 +460,7 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return NO;
+    return YES;
 }
 
 #pragma mark - Collection view delegate flow layout
@@ -493,7 +502,7 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
 
 #pragma mark - Messages collection view cell delegate
 
-- (void)messagesCollectionViewCellDidTapAvatar:(JSQMessagesCollectionViewCell *)cell
+- (void)messagesCollectionViewCellDidTapAvatar:(JSQMessagesCollectionViewTextCell *)cell
 {
     [self.collectionView.delegate collectionView:self.collectionView
                            didTapAvatarImageView:cell.avatarImageView
