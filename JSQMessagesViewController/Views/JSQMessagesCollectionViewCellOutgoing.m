@@ -4,16 +4,12 @@
 //
 //
 //  Documentation
-//  http://cocoadocs.org/docsets/JSQMessagesViewController
+//  http://cocoadocs.org/docsets/JSMessagesViewController
 //
 //
-//  GitHub
-//  https://github.com/jessesquires/JSQMessagesViewController
-//
-//
-//  License
+//  The MIT License
 //  Copyright (c) 2014 Jesse Squires
-//  Released under an MIT license: http://opensource.org/licenses/MIT
+//  http://opensource.org/licenses/MIT
 //
 
 #import "JSQMessagesCollectionViewCellOutgoing.h"

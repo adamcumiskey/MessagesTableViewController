@@ -4,20 +4,20 @@
 //
 //
 //  Documentation
-//  http://cocoadocs.org/docsets/JSQMessagesViewController
+//  http://cocoadocs.org/docsets/JSMessagesViewController
 //
 //
-//  GitHub
-//  https://github.com/jessesquires/JSQMessagesViewController
-//
-//
-//  License
+//  The MIT License
 //  Copyright (c) 2014 Jesse Squires
-//  Released under an MIT license: http://opensource.org/licenses/MIT
+//  http://opensource.org/licenses/MIT
 //
 //
-//  Ideas for springy collection view layout taken from Ash Furrow
+//
+//  Initial code for springy collection view layout taken from Ash Furrow
 //  ASHSpringyCollectionView
+//
+//  The MIT License
+//  Copyright (c) 2013 Ash Furrow
 //  https://github.com/AshFurrow/ASHSpringyCollectionView
 //
 
@@ -63,7 +63,7 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault
  *  Specifies the degree of resistence for the "springiness" of items in the layout. 
  *  This property has no effect if `springinessEnabled` is set to `NO`.
  *
- *  @discussion The default value is `1000`. Increasing this value increases the resistance, that is, items become less "bouncy". 
+ *  @discussion The default value is `900`. Increasing this value increases the resistance, that is, items become less "bouncy". 
  *  Decrease this value in order to make items more "bouncy".
  */
 @property (assign, nonatomic) NSUInteger springResistanceFactor;
@@ -113,7 +113,7 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault
  *      (or where the avatar would normally appear). For outgoing messages this is the left side, 
  *      for incoming messages this is the right side.
  *
- *  3. The top value insets the top of the frame.
+ *  3. The top value insets the top of the frame
  *
  *  4. The bottom value insets the bottom of the frame.
  *
@@ -122,7 +122,7 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault
  *  @warning Adjusting this value is an advanced endeavour and not recommended. 
  *  You will only need to adjust this value should you choose to provide your own bubble image assets.
  *  Changing this value may also require you to manually calculate the itemSize for each cell 
- *  in the layout by overriding the delegate method `collectionView:layout:sizeForItemAtIndexPath:`
+ *  in the layout by overriding the delegate method `collectionView: layout: sizeForItemAtIndexPath:`
  */
 @property (assign, nonatomic) UIEdgeInsets messageBubbleTextViewFrameInsets;
 
@@ -135,9 +135,11 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault
  *  @warning Adjusting this value is an advanced endeavour and not recommended. 
  *  You will only need to adjust this value should you choose to provide your own bubble image assets.
  *  Changing this value may also require you to manually calculate the itemSize for each cell
- *  in the layout by overriding the delegate method `collectionView:layout:sizeForItemAtIndexPath:`
+ *  in the layout by overriding the delegate method `collectionView: layout: sizeForItemAtIndexPath:`
  */
 @property (assign, nonatomic) UIEdgeInsets messageBubbleTextViewTextContainerInsets;
+
+@property (assign, nonatomic) UIEdgeInsets messageBubbleImageViewFrameInsets;
 
 /**
  *  The size of the avatar image view for incoming messages.

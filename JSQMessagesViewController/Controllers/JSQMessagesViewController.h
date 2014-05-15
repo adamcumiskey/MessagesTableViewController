@@ -4,16 +4,12 @@
 //
 //
 //  Documentation
-//  http://cocoadocs.org/docsets/JSQMessagesViewController
+//  http://cocoadocs.org/docsets/JSMessagesViewController
 //
 //
-//  GitHub
-//  https://github.com/jessesquires/JSQMessagesViewController
-//
-//
-//  License
+//  The MIT License
 //  Copyright (c) 2014 Jesse Squires
-//  Released under an MIT license: http://opensource.org/licenses/MIT
+//  http://opensource.org/licenses/MIT
 //
 
 #import <UIKit/UIKit.h>
@@ -23,12 +19,11 @@
 
 @class JSQMessagesViewController;
 @class JSQMessagesInputToolbar;
+@class JSQMessage;
 
 /**
- *  The `JSQMessagesViewController` class is an abstract class that represents a view controller whose content consists of
+ *  The `JSQMessagesViewController` class represents a view controller whose content consists of 
  *  a `JSQMessagesCollectionView` and `JSQMessagesInputToolbar` and is specialized to display a messaging interface.
- *
- *  @warning This class is intended to be subclassed. You should not use it directly.
  */
 @interface JSQMessagesViewController : UIViewController <JSQMessagesCollectionViewDataSource,
                                                          JSQMessagesCollectionViewDelegateFlowLayout>
@@ -66,13 +61,13 @@
  *  @discussion The default value is the string returned by `[JSQMessagesCollectionViewCellOutgoing cellReuseIdentifier]`. 
  *  This value must not be `nil`.
  *  
- *  @see `JSQMessagesCollectionViewCellOutgoing`.
+ *  @see JSQMessagesCollectionViewCellOutgoing.
  *
  *  @warning Overriding this property's default value is *not* recommended. 
  *  You should only override this property's default value if you are proividing your own cell prototypes.
  *  These prototypes must be registered with the collectionView for reuse and you are then responsible for 
  *  completely overriding many delegate and data source methods for the collectionView, 
- *  including `collectionView:cellForItemAtIndexPath:`.
+ *  including `collectionView: cellForItemAtIndexPath:`.
  */
 @property (copy, nonatomic) NSString *outgoingCellIdentifier;
 
@@ -82,22 +77,26 @@
  *  @discussion The default value is the string returned by `[JSQMessagesCollectionViewCellIncoming cellReuseIdentifier]`. 
  *  This value must not be `nil`.
  *
- *  @see `JSQMessagesCollectionViewCellIncoming`.
+ *  @see JSQMessagesCollectionViewCellIncoming.
  *
  *  @warning Overriding this property's default value is *not* recommended. 
  *  You should only override this property's default value if you are proividing your own cell prototypes. 
  *  These prototypes must be registered with the collectionView for reuse and you are then responsible for 
  *  completely overriding many delegate and data source methods for the collectionView, 
- *  including `collectionView:cellForItemAtIndexPath:`.
+ *  including `collectionView: cellForItemAtIndexPath:`.
  */
 @property (copy, nonatomic) NSString *incomingCellIdentifier;
+
+@property (copy, nonatomic) NSString *outgoingImageCellIdentifier;
+
+@property (copy, nonatomic) NSString *incomingImageCellIdentifier;
 
 /**
  *  The color for the typing indicator for incoming messages.
  *
  *  @discussion The color specified is used for the typing indicator bubble image color.
  *  This color is then slightly darkened and used to color the typing indicator ellipsis.
- *  The default value is the light gray color value return by `[UIColor jsq_messageBubbleLightGrayColor]`.
+ *  The default value is the light gray color value return by `jsq_messageBubbleLightGrayColor`.
  */
 @property (strong, nonatomic) UIColor *typingIndicatorColor;
 
@@ -107,13 +106,6 @@
  *  Setting this property to `NO` will animate hiding the typing indicator immediately.
  */
 @property (assign, nonatomic) BOOL showTypingIndicator;
-
-/**
- *  Specifies whether or not the view controller should show the "load earlier messages" header view.
- *  @discussion Setting this property to `YES` will show the header view immediately.
- *  Settings this property to `NO` will hide the header view immediately.
- */
-@property (assign, nonatomic) BOOL showLoadEarlierMessagesHeader;
 
 #pragma mark - Class methods
 
@@ -127,8 +119,6 @@
 
 /**
  *  Creates and returns a new `JSQMessagesViewController` object.
- *  
- *  @discussion This is the designated initializer for programmatic instantiation.
  *
  *  @return The initialized messages view controller if successful, otherwise `nil`.
  */
@@ -137,18 +127,12 @@
 #pragma mark - Messages view controller
 
 /**
- *  This method is called when the user taps the send button on the inputToolbar
- *  after composing a message with the specified data.
+ *  This method is called when the user taps the send button on the `inputToolbar` after composing the specified message.
  *
- *  @param button The send button that was pressed by the user.
- *  @param text   The message text.
- *  @param sender The message sender.
- *  @param date   The message date.
+ *  @param sender  The send button that was pressed by the user.
+ *  @param message The message composed by the user.
  */
-- (void)didPressSendButton:(UIButton *)button
-           withMessageText:(NSString *)text
-                    sender:(NSString *)sender
-                      date:(NSDate *)date;
+- (void)didPressSendButton:(UIButton *)sender withMessage:(JSQMessage *)message;
 
 /**
  *  This method is called when the user taps the accessory button on the `inputToolbar`.
@@ -163,26 +147,13 @@
  *  reloading the collection view, and scrolling to the newly sent message 
  *  as specified by `automaticallyScrollsToMostRecentMessage`.
  *
- *  @discussion You should call this method at the end of `didPressSendButton:withMessage:` 
+ *  @discussion You should call this method at the end of `didPressSendButton: withMessage:` 
  *  after adding the new message to your data source and performing any related tasks.
  *
  *  @see `automaticallyScrollsToMostRecentMessage`.
  *  @see `didPressSendButton: withMessage:`.
  */
 - (void)finishSendingMessage;
-
-/**
- *  Completes the "receiving" of a new message by animating the typing indicator,
- *  animating the addition of a new collection view cell in the collection view,
- *  reloading the collection view, and scrolling to the newly sent message
- *  as specified by `automaticallyScrollsToMostRecentMessage`.
- *
- *  @discussion You should call this method after adding a new "received" message
- *  to your data source and performing any related tasks.
- *
- *  @see `automaticallyScrollsToMostRecentMessage`.
- */
-- (void)finishReceivingMessage;
 
 /**
  *  Scrolls the collection view such that the bottom most cell is completely visible, above the `inputToolbar`.

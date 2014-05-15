@@ -27,6 +27,11 @@
     return [[JSQMessage alloc] initWithText:text sender:sender date:[NSDate date]];
 }
 
++ (instancetype)messageWithImage:(UIImage *)image sender:(NSString *)sender
+{
+    return [[JSQMessage alloc] initWithImage:image sender:sender date:[NSDate date]];
+}
+
 - (instancetype)initWithText:(NSString *)text
                       sender:(NSString *)sender
                         date:(NSDate *)date
@@ -44,11 +49,30 @@
     return self;
 }
 
+- (instancetype)initWithImage:(UIImage *)image
+                       sender:(NSString *)sender
+                         date:(NSDate *)date
+{
+    NSAssert(image, @"ERROR: image must not be nil: %s", __PRETTY_FUNCTION__);
+    NSAssert(sender, @"ERROR: sender must not be nil: %s", __PRETTY_FUNCTION__);
+    NSAssert(date, @"ERROR: date must not be nil: %s", __PRETTY_FUNCTION__);
+    
+    self = [super init];
+    if (self) {
+        _image = image;
+        _sender = sender;
+        _date = date;
+    }
+    return self;
+}
+
 - (void)dealloc
 {
     _text = nil;
     _sender = nil;
     _date = nil;
+    _image = nil;
+    _imageURL = nil;
 }
 
 #pragma mark - JSQMessage

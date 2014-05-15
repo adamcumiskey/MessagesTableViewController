@@ -4,16 +4,12 @@
 //
 //
 //  Documentation
-//  http://cocoadocs.org/docsets/JSQMessagesViewController
+//  http://cocoadocs.org/docsets/JSMessagesViewController
 //
 //
-//  GitHub
-//  https://github.com/jessesquires/JSQMessagesViewController
-//
-//
-//  License
+//  The MIT License
 //  Copyright (c) 2014 Jesse Squires
-//  Released under an MIT license: http://opensource.org/licenses/MIT
+//  http://opensource.org/licenses/MIT
 //
 
 #import <UIKit/UIKit.h>
@@ -42,10 +38,8 @@
 
 /**
  *  The `JSQMessagesCollectionViewCell` is an abstract class that presents the content for a single message data item
- *  when that item is within the collection view’s visible bounds. The layout and presentation 
+ *  when that item is within the collection view’s visible bounds. The layout and presentation
  *  of cells is managed by the collection view and its corresponding layout object.
- *
- *  @warning This class is intended to be subclassed. You should not use it directly.
  */
 @interface JSQMessagesCollectionViewCell : UICollectionViewCell
 
@@ -75,7 +69,7 @@
 /**
  *  Returns the text view of the cell. This text view contains the message body text.
  */
-@property (weak, nonatomic, readonly) UITextView *textView;
+@property (weak, nonatomic, readonly) UIView *contentView;
 
 /**
  *  The bubble image view of the cell that is responsible for displaying bubble images.
@@ -107,7 +101,7 @@
 /**
  *  Returns the `UINib` object initialized for the cell.
  *
- *  @return The initialized `UINib` object or `nil` if there were errors during 
+ *  @return The initialized `UINib` object or `nil` if there were errors during
  *  initialization or the nib file could not be located.
  */
 + (UINib *)nib;

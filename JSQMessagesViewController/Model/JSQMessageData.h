@@ -47,4 +47,14 @@
  */
 - (NSDate *)date;
 
+/**
+ * @return The URL where the media image can be found
+ */
+- (NSURL *)imageURL;
+
+/**
+ * @return The image retrieved from the URL
+ */
+- (UIImage *)image;
+
 @end

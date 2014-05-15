@@ -4,16 +4,12 @@
 //
 //
 //  Documentation
-//  http://cocoadocs.org/docsets/JSQMessagesViewController
+//  http://cocoadocs.org/docsets/JSMessagesViewController
 //
 //
-//  GitHub
-//  https://github.com/jessesquires/JSQMessagesViewController
-//
-//
-//  License
+//  The MIT License
 //  Copyright (c) 2014 Jesse Squires
-//  Released under an MIT license: http://opensource.org/licenses/MIT
+//  http://opensource.org/licenses/MIT
 //
 
 #import "JSQMessagesCollectionViewCell.h"
@@ -24,22 +20,21 @@
 
 #import "UIView+JSQMessages.h"
 
-
 @interface JSQMessagesCollectionViewCell ()
 
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *cellTopLabel;
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *messageBubbleTopLabel;
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *cellBottomLabel;
 
-@property (weak, nonatomic) IBOutlet UITextView *textView;
+@property (weak, nonatomic) IBOutlet UIView *contentView;
 
 @property (weak, nonatomic) IBOutlet UIView *messageBubbleContainerView;
 @property (weak, nonatomic) IBOutlet UIView *avatarContainerView;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewTopVerticalSpaceConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBottomVerticalSpaceConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewAvatarHorizontalSpaceConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewMarginHorizontalSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewTopVerticalSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewBottomVerticalSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewAvatarHorizontalSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewMarginHorizontalSpaceConstraint;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cellTopLabelHeightContraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageBubbleTopLabelHeightContraint;
@@ -49,8 +44,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *avatarContainerViewHeightContraint;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageBubbleLeftRightMarginConstraint;
-
-@property (assign, nonatomic) UIEdgeInsets textViewFrameInsets;
 
 @property (assign, nonatomic) CGSize avatarViewSize;
 
@@ -108,21 +101,6 @@
     self.cellBottomLabel.font = [UIFont systemFontOfSize:11.0f];
     self.cellBottomLabel.textColor = [UIColor lightGrayColor];
     
-    self.textView.textColor = [UIColor whiteColor];
-    self.textView.editable = NO;
-    self.textView.selectable = YES;
-    self.textView.userInteractionEnabled = YES;
-    self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
-    self.textView.showsHorizontalScrollIndicator = NO;
-    self.textView.showsVerticalScrollIndicator = NO;
-    self.textView.scrollEnabled = NO;
-    self.textView.backgroundColor = [UIColor clearColor];
-    self.textView.contentInset = UIEdgeInsetsZero;
-    self.textView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    self.textView.contentOffset = CGPointZero;
-    self.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor],
-                                          NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
-    
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(jsq_handleLongPressGesture:)];
     longPress.minimumPressDuration = 0.4f;
     [self addGestureRecognizer:longPress];
@@ -140,7 +118,6 @@
     _cellTopLabel = nil;
     _messageBubbleTopLabel = nil;
     _cellBottomLabel = nil;
-    _textView = nil;
     _messageBubbleImageView = nil;
     _avatarImageView = nil;
     
@@ -160,7 +137,6 @@
     self.cellTopLabel.text = nil;
     self.messageBubbleTopLabel.text = nil;
     self.cellBottomLabel.text = nil;
-    self.textView.text = nil;
 }
 
 - (void)applyLayoutAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
@@ -169,10 +145,7 @@
     
     JSQMessagesCollectionViewLayoutAttributes *customAttributes = (JSQMessagesCollectionViewLayoutAttributes *)layoutAttributes;
     
-    self.textView.font = customAttributes.messageBubbleFont;
     self.messageBubbleLeftRightMarginConstraint.constant = customAttributes.messageBubbleLeftRightMargin;
-    self.textViewFrameInsets = customAttributes.textViewFrameInsets;
-    self.textView.textContainerInset = customAttributes.textViewTextContainerInsets;
     self.cellTopLabelHeightContraint.constant = customAttributes.cellTopLabelHeight;
     self.messageBubbleTopLabelHeightContraint.constant = customAttributes.messageBubbleTopLabelHeight;
     self.cellBottomLabelHeightContraint.constant = customAttributes.cellBottomLabelHeight;
@@ -221,7 +194,7 @@
                                               CGRectGetHeight(self.messageBubbleContainerView.bounds));
     
     [messageBubbleImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.messageBubbleContainerView insertSubview:messageBubbleImageView belowSubview:self.textView];
+    [self.messageBubbleContainerView insertSubview:messageBubbleImageView belowSubview:self.contentView];
     [self.messageBubbleContainerView jsq_pinAllEdgesOfSubview:messageBubbleImageView];
     [self setNeedsUpdateConstraints];
     
@@ -261,10 +234,10 @@
 
 - (void)setTextViewFrameInsets:(UIEdgeInsets)textViewFrameInsets
 {
-    self.textViewTopVerticalSpaceConstraint.constant = textViewFrameInsets.top;
-    self.textViewBottomVerticalSpaceConstraint.constant = textViewFrameInsets.bottom;
-    self.textViewAvatarHorizontalSpaceConstraint.constant = textViewFrameInsets.right;
-    self.textViewMarginHorizontalSpaceConstraint.constant = textViewFrameInsets.left;
+    self.contentViewTopVerticalSpaceConstraint.constant = textViewFrameInsets.top;
+    self.contentViewBottomVerticalSpaceConstraint.constant = textViewFrameInsets.bottom;
+    self.contentViewAvatarHorizontalSpaceConstraint.constant = textViewFrameInsets.right;
+    self.contentViewMarginHorizontalSpaceConstraint.constant = textViewFrameInsets.left;
     [self setNeedsUpdateConstraints];
 }
 
@@ -274,37 +247,6 @@
 {
     return CGSizeMake(self.avatarContainerViewWidthContraint.constant,
                       self.avatarContainerViewHeightContraint.constant);
-}
-
-- (UIEdgeInsets)textViewFrameInsets
-{
-    return UIEdgeInsetsMake(self.textViewTopVerticalSpaceConstraint.constant,
-                            self.textViewMarginHorizontalSpaceConstraint.constant,
-                            self.textViewBottomVerticalSpaceConstraint.constant,
-                            self.textViewAvatarHorizontalSpaceConstraint.constant);
-}
-
-#pragma mark - UIResponder
-
-- (BOOL)canBecomeFirstResponder
-{
-    return YES;
-}
-
-- (BOOL)becomeFirstResponder
-{
-    return [super becomeFirstResponder];
-}
-
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
-    return (action == @selector(copy:));
-}
-
-- (void)copy:(id)sender
-{
-    [[UIPasteboard generalPasteboard] setString:self.textView.text];
-    [self resignFirstResponder];
 }
 
 #pragma mark - Gesture recognizers

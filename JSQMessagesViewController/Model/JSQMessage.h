@@ -42,6 +42,16 @@
  */
 @property (copy, nonatomic) NSDate *date;
 
+/**
+ * @return The URL where the media image can be found
+ */
+@property (copy, nonatomic) NSURL *imageURL;
+
+/**
+ * @return The image retrieved from the URL
+ */
+@property (copy, nonatomic) UIImage *image;
+
 #pragma mark - Initialization
 
 /**
@@ -55,6 +65,16 @@
 + (instancetype)messageWithText:(NSString *)text sender:(NSString *)sender;
 
 /**
+ *  Initializes and returns a message object having the given image, sender, and current system date.
+ *
+ *  @param image   The image attachment of the message.
+ *  @param sender The name of the user who sent the message.
+ *
+ *  @return An initialized `JSQMessage` object or `nil` if the object could not be successfully initialized.
+ */
++ (instancetype)messageWithImage:(UIImage *)image sender:(NSString *)sender;
+
+/**
  *  Initializes and returns a message object having the given text, sender, and date.
  *
  *  @param text   The body text of the message.
@@ -66,6 +86,19 @@
 - (instancetype)initWithText:(NSString *)text
                       sender:(NSString *)sender
                         date:(NSDate *)date;
+
+/**
+ *  Initializes and returns a message object with just an image
+ *
+ *  @param image The image attachment of the message.
+ *  @param sender The name of the user who sent the message.
+ *  @param date   The date that the message was sent.
+ *
+ *  @return An initialized `JSQMessage` object or `nil` if the object could not be successfully initialized.
+ */
+- (instancetype)initWithImage:(UIImage *)image
+                       sender:(NSString *)sender
+                         date:(NSDate *)date;
 
 /**
  *  Returns a boolean value that indicates whether a given message is equal to the receiver.

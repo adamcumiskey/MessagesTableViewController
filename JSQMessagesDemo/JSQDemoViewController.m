@@ -203,7 +203,7 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
          */
         [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
         [self.messages addObject:copyMessage];
-        [self finishReceivingMessage];
+        [self.collectionView reloadData];
     });
 }
 
@@ -234,15 +234,18 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
     JSQMessage *message = [[JSQMessage alloc] initWithText:text sender:sender date:date];
     [self.messages addObject:message];
     
-    [self finishSendingMessage];
+    [self.collectionView reloadData];
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    NSLog(@"Camera pressed!");
-    /**
-     *  Accessory button has no default functionality, yet.
-     */
+    UIImagePickerController *imagePickerVC = [[UIImagePickerController alloc] init];
+    [imagePickerVC setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    [imagePickerVC setDelegate:self];
+    
+    [self presentViewController:imagePickerVC
+                       animated:YES
+                     completion:nil];
 }
 
 
@@ -381,15 +384,17 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
     
     JSQMessage *msg = [self.messages objectAtIndex:indexPath.item];
     
-    if ([msg.sender isEqualToString:self.sender]) {
-        cell.textView.textColor = [UIColor blackColor];
+    if ([cell respondsToSelector:@selector(textView)]) {
+        UITextView *textView = [cell performSelector:@selector(textView) withObject:nil];
+        if ([msg.sender isEqualToString:self.sender]) {
+            
+            [textView setTextColor:[UIColor blackColor]];
+        } else {
+            textView.textColor = [UIColor whiteColor];
+        }
+        textView.linkTextAttributes = @{ NSForegroundColorAttributeName : textView.textColor,
+                                         NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
-    else {
-        cell.textView.textColor = [UIColor whiteColor];
-    }
-    
-    cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
-                                          NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     
     return cell;
 }
@@ -450,6 +455,25 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
                 header:(JSQMessagesLoadEarlierHeaderView *)headerView didTapLoadEarlierMessagesButton:(UIButton *)sender
 {
     NSLog(@"Load earlier messages!");
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
+    JSQMessage *message = [JSQMessage messageWithImage:originalImage sender:self.sender];
+    [self.messages addObject:message];
+    
+    [self dismissViewControllerAnimated:YES
+                             completion:^{
+                                 [self finishSendingMessage];
+                             }];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
 }
 
 @end

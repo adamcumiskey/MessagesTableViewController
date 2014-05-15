@@ -4,16 +4,12 @@
 //
 //
 //  Documentation
-//  http://cocoadocs.org/docsets/JSQMessagesViewController
+//  http://cocoadocs.org/docsets/JSMessagesViewController
 //
 //
-//  GitHub
-//  https://github.com/jessesquires/JSQMessagesViewController
-//
-//
-//  License
+//  The MIT License
 //  Copyright (c) 2014 Jesse Squires
-//  Released under an MIT license: http://opensource.org/licenses/MIT
+//  http://opensource.org/licenses/MIT
 //
 
 #import "JSQMessagesCollectionViewLayoutAttributes.h"
@@ -80,19 +76,16 @@
 
 - (BOOL)isEqual:(id)object
 {
-    if (self == object) {
-        return YES;
-    }
-    
     if (![object isKindOfClass:[self class]]) {
         return NO;
     }
     
     JSQMessagesCollectionViewLayoutAttributes *layoutAttributes = (JSQMessagesCollectionViewLayoutAttributes *)object;
     
-    if (![layoutAttributes.messageBubbleFont isEqual:self.messageBubbleFont]
+    if ([layoutAttributes.messageBubbleFont isEqual:self.messageBubbleFont]
         || !UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.textViewFrameInsets, self.textViewFrameInsets)
         || !UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.textViewTextContainerInsets, self.textViewTextContainerInsets)
+        || !UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.imageViewFrameInsets, self.imageViewFrameInsets)
         || !CGSizeEqualToSize(layoutAttributes.incomingAvatarViewSize, self.incomingAvatarViewSize)
         || !CGSizeEqualToSize(layoutAttributes.outgoingAvatarViewSize, self.outgoingAvatarViewSize)
         || (int)layoutAttributes.messageBubbleLeftRightMargin != (int)self.messageBubbleLeftRightMargin
@@ -107,10 +100,15 @@
 
 - (NSUInteger)hash
 {
-    return [self.indexPath hash]
-            ^ (NSUInteger)self.cellTopLabelHeight
-            ^ (NSUInteger)self.messageBubbleTopLabelHeight
-            ^ (NSUInteger)self.cellBottomLabelHeight;
+    NSUInteger customHash = [self.messageBubbleFont hash]
+                            ^ (int)self.messageBubbleLeftRightMargin
+                            ^ (int)(self.incomingAvatarViewSize.width + self.incomingAvatarViewSize.height)
+                            ^ (int)(self.outgoingAvatarViewSize.width + self.outgoingAvatarViewSize.height)
+                            ^ (int)self.cellTopLabelHeight
+                            ^ (int)self.messageBubbleTopLabelHeight
+                            ^ (int)self.cellBottomLabelHeight;
+    
+    return [super hash] ^ customHash;
 }
 
 #pragma mark - NSCopying
@@ -122,6 +120,7 @@
     copy.messageBubbleLeftRightMargin = self.messageBubbleLeftRightMargin;
     copy.textViewFrameInsets = self.textViewFrameInsets;
     copy.textViewTextContainerInsets = self.textViewTextContainerInsets;
+    copy.imageViewFrameInsets = self.imageViewFrameInsets;
     copy.incomingAvatarViewSize = self.incomingAvatarViewSize;
     copy.outgoingAvatarViewSize = self.outgoingAvatarViewSize;
     copy.cellTopLabelHeight = self.cellTopLabelHeight;

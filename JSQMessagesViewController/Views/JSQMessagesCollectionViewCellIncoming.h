@@ -4,24 +4,20 @@
 //
 //
 //  Documentation
-//  http://cocoadocs.org/docsets/JSQMessagesViewController
+//  http://cocoadocs.org/docsets/JSMessagesViewController
 //
 //
-//  GitHub
-//  https://github.com/jessesquires/JSQMessagesViewController
-//
-//
-//  License
+//  The MIT License
 //  Copyright (c) 2014 Jesse Squires
-//  Released under an MIT license: http://opensource.org/licenses/MIT
+//  http://opensource.org/licenses/MIT
 //
 
-#import "JSQMessagesCollectionViewCell.h"
+#import "JSQMessagesCollectionViewTextCell.h"
 
 /**
  *  A `JSQMessagesCollectionViewCellIncoming` object is a concrete instance of `JSQMessagesCollectionViewCell`
  *  that represents an incoming message data item.
  */
-@interface JSQMessagesCollectionViewCellIncoming : JSQMessagesCollectionViewCell
+@interface JSQMessagesCollectionViewCellIncoming : JSQMessagesCollectionViewTextCell
 
 @end

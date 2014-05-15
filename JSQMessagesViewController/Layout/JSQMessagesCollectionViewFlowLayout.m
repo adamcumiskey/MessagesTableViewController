@@ -4,20 +4,20 @@
 //
 //
 //  Documentation
-//  http://cocoadocs.org/docsets/JSQMessagesViewController
+//  http://cocoadocs.org/docsets/JSMessagesViewController
 //
 //
-//  GitHub
-//  https://github.com/jessesquires/JSQMessagesViewController
-//
-//
-//  License
+//  The MIT License
 //  Copyright (c) 2014 Jesse Squires
-//  Released under an MIT license: http://opensource.org/licenses/MIT
+//  http://opensource.org/licenses/MIT
 //
 //
-//  Ideas for springy collection view layout taken from Ash Furrow
+//
+//  Initial code for springy collection view layout taken from Ash Furrow
 //  ASHSpringyCollectionView
+//
+//  The MIT License
+//  Copyright (c) 2013 Ash Furrow
 //  https://github.com/AshFurrow/ASHSpringyCollectionView
 //
 
@@ -38,13 +38,10 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 
 @property (strong, nonatomic) UIDynamicAnimator *dynamicAnimator;
 @property (strong, nonatomic) NSMutableSet *visibleIndexPaths;
-
+@property (assign, nonatomic) UIInterfaceOrientation interfaceOrientation;
 @property (assign, nonatomic) CGFloat latestDelta;
 
-- (void)jsq_configureFlowLayout;
-
 - (void)jsq_didReceiveApplicationMemoryWarningNotification:(NSNotification *)notification;
-- (void)jsq_didReceiveDeviceOrientationDidChangeNotification:(NSNotification *)notification;
 
 - (void)jsq_configureMessageCellLayoutAttributes:(JSQMessagesCollectionViewLayoutAttributes *)layoutAttributes;
 
@@ -68,50 +65,33 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 
 #pragma mark - Initialization
 
-- (void)jsq_configureFlowLayout
+- (void)awakeFromNib
 {
+    [super awakeFromNib];
+    
     self.scrollDirection = UICollectionViewScrollDirectionVertical;
     self.sectionInset = UIEdgeInsetsMake(10.0f, 4.0f, 10.0f, 4.0f);
     self.minimumLineSpacing = 4.0f;
     
-    _messageBubbleSizes = [NSMutableDictionary new];
+    self.messageBubbleSizes = [NSMutableDictionary new];
     
-    _messageBubbleFont = [UIFont systemFontOfSize:15.0f];
-    _messageBubbleLeftRightMargin = 40.0f;
-    _messageBubbleTextViewFrameInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 6.0f);
-    _messageBubbleTextViewTextContainerInsets = UIEdgeInsetsMake(10.0f, 8.0f, 10.0f, 8.0f);
+    self.messageBubbleFont = [UIFont systemFontOfSize:15.0f];
+    self.messageBubbleLeftRightMargin = 40.0f;
+    self.messageBubbleTextViewFrameInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 6.0f);
+    self.messageBubbleTextViewTextContainerInsets = UIEdgeInsetsMake(10.0f, 8.0f, 10.0f, 8.0f);
+    self.messageBubbleImageViewFrameInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 6.0f);
     
     CGSize defaultAvatarSize = CGSizeMake(34.0f, 34.0f);
-    _incomingAvatarViewSize = defaultAvatarSize;
-    _outgoingAvatarViewSize = defaultAvatarSize;
+    self.incomingAvatarViewSize = defaultAvatarSize;
+    self.outgoingAvatarViewSize = defaultAvatarSize;
     
     _springinessEnabled = NO;
-    _springResistanceFactor = 1000;
+    _springResistanceFactor = 900;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(jsq_didReceiveApplicationMemoryWarningNotification:)
                                                  name:UIApplicationDidReceiveMemoryWarningNotification
                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(jsq_didReceiveDeviceOrientationDidChangeNotification:)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
-}
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [self jsq_configureFlowLayout];
-    }
-    return self;
-}
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    [self jsq_configureFlowLayout];
 }
 
 + (Class)layoutAttributesClass
@@ -121,8 +101,6 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
     _messageBubbleFont = nil;
     
     _messageBubbleSizes = nil;
@@ -204,28 +182,20 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 - (void)jsq_didReceiveApplicationMemoryWarningNotification:(NSNotification *)notification
 {
     [self.messageBubbleSizes removeAllObjects];
-    [self.dynamicAnimator removeAllBehaviors];
-    [self.visibleIndexPaths removeAllObjects];
-}
-
-- (void)jsq_didReceiveDeviceOrientationDidChangeNotification:(NSNotification *)notification
-{
-    [self.dynamicAnimator removeAllBehaviors];
-    [self.visibleIndexPaths removeAllObjects];
-    [self invalidateLayout];
 }
 
 #pragma mark - Collection view flow layout
 
-- (void)invalidateLayout
-{
-    [self.messageBubbleSizes removeAllObjects];
-    [super invalidateLayout];
-}
-
 - (void)prepareLayout
 {
     [super prepareLayout];
+    
+    if ([UIApplication sharedApplication].statusBarOrientation != self.interfaceOrientation) {
+        [self.dynamicAnimator removeAllBehaviors];
+        [self.visibleIndexPaths removeAllObjects];
+    }
+    
+    self.interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     
     if (self.springinessEnabled) {
         //  pad rect to avoid flickering
@@ -303,9 +273,7 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
                 }
                 
                 CGSize size = self.collectionView.bounds.size;
-                JSQMessagesCollectionViewLayoutAttributes *attributes = [JSQMessagesCollectionViewLayoutAttributes
-                                                                         layoutAttributesForCellWithIndexPath:updateItem.indexPathAfterUpdate];
-                [self jsq_configureMessageCellLayoutAttributes:attributes];
+                UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:updateItem.indexPathAfterUpdate];
                 attributes.frame = CGRectMake(0.0f,
                                               size.height - size.width,
                                               size.width,
@@ -322,10 +290,10 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 
 - (CGSize)messageBubbleSizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSValue *cachedSize = [self.messageBubbleSizes objectForKey:indexPath];
-    if (cachedSize) {
-        return [cachedSize CGSizeValue];
-    }
+//    NSValue *cachedSize = [self.messageBubbleSizes objectForKey:indexPath];
+//    if (cachedSize) {
+//        return [cachedSize CGSizeValue];
+//    }
     
     id<JSQMessageData> messageData = [self.collectionView.dataSource collectionView:self.collectionView messageDataForItemAtIndexPath:indexPath];
     
@@ -342,12 +310,25 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     
     CGSize stringSize = CGRectIntegral(stringRect).size;
     
-    CGFloat verticalInsets = self.messageBubbleTextViewTextContainerInsets.top + self.messageBubbleTextViewTextContainerInsets.bottom;
-    
-    CGSize finalSize = CGSizeMake(stringSize.width, stringSize.height + verticalInsets);
+    CGSize finalSize = CGSizeZero;
+    if ([messageData image]) {
+        CGSize imageSize = [[messageData image] size];
+        if (imageSize.width > maximumTextWidth) {
+            imageSize.height = imageSize.height * (maximumTextWidth/imageSize.width);
+            imageSize.width = maximumTextWidth;
+        }
+        finalSize = CGSizeMake(imageSize.width,
+                               imageSize.height
+                               + self.messageBubbleTextViewTextContainerInsets.top
+                               + self.messageBubbleTextViewTextContainerInsets.bottom);
+    } else {
+        finalSize = CGSizeMake(stringSize.width,
+                               stringSize.height
+                               + self.messageBubbleTextViewTextContainerInsets.top
+                               + self.messageBubbleTextViewTextContainerInsets.bottom);
+    }
     
     [self.messageBubbleSizes setObject:[NSValue valueWithCGSize:finalSize] forKey:indexPath];
-    
     return finalSize;
 }
 
@@ -366,6 +347,8 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     
     layoutAttributes.textViewTextContainerInsets = self.messageBubbleTextViewTextContainerInsets;
     
+    layoutAttributes.imageViewFrameInsets = self.messageBubbleImageViewFrameInsets;
+        
     layoutAttributes.messageBubbleFont = self.messageBubbleFont;
     
     layoutAttributes.incomingAvatarViewSize = self.incomingAvatarViewSize;
@@ -409,7 +392,7 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 {
     UIAttachmentBehavior *springBehavior = [[UIAttachmentBehavior alloc] initWithItem:item attachedToAnchor:item.center];
     springBehavior.length = 1.0f;
-    springBehavior.damping = 1.0f;
+    springBehavior.damping = 0.8f;
     springBehavior.frequency = 1.0f;
     return springBehavior;
 }
