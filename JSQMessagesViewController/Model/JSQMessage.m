@@ -37,8 +37,8 @@
     
     self = [super init];
     if (self) {
-        _text = text;
         _sender = sender;
+        _text = text;
         _date = date;
     }
     return self;
@@ -46,8 +46,8 @@
 
 - (void)dealloc
 {
-    _text = nil;
     _sender = nil;
+    _text = nil;
     _date = nil;
 }
 

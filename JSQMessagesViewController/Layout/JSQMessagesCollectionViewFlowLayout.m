@@ -344,13 +344,15 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     
     // Calculate the final size of the cell based on whether there is an image attached or not
     CGSize finalSize = CGSizeZero;
-    if ([messageData image]) {
+    if ([messageData mediaURL]) {
         // If there is an image message, we need to calculate the final size of it so that it
         // fits within the witdth of the bubble while maintaining its aspect ratio.
-        CGSize imageSize = [[messageData image] size];
-        if (imageSize.width > maximumTextWidth) {
-            imageSize.height = imageSize.height * (maximumTextWidth/imageSize.width);
-            imageSize.width = maximumTextWidth;
+        CGSize imageSize = [messageData imageSize];
+        CGFloat maxImageWidth = maximumTextWidth;
+        if (imageSize.width > maxImageWidth) {
+            CGFloat scaleFactor = maxImageWidth/imageSize.width;
+            imageSize.height = imageSize.height * scaleFactor;
+            imageSize.width = imageSize.width * scaleFactor;
         }
         finalSize = CGSizeMake(imageSize.width,
                                imageSize.height

@@ -16,7 +16,7 @@
 //  Released under an MIT license: http://opensource.org/licenses/MIT
 //
 
-#import <Foundation/Foundation.h>
+#import "JSQMessage.h"
 
 #import "JSQMessageData.h"
 
@@ -26,6 +26,7 @@
  *  It contains the message text, its sender, and the date that the message was sent.
  */
 @interface JSQMessage : NSObject <JSQMessageData, NSCoding, NSCopying>
+
 
 /**
  *  The body text of the message. This value must not be `nil`.
@@ -43,8 +44,20 @@
 @property (copy, nonatomic) NSDate *date;
 
 /**
- * The image attached to the message. This value can be nil
+ *  @return Preview image to display in the input text view with the NSTextAttachment
  */
+@property (copy, nonatomic) UIImage *mediaAttachmentPreview;
+
+/**
+ *  @return The view to display in the message bubble
+ */
+@property (copy, nonatomic) UIView *mediaPreview;
+
+/**
+ *  @return The URL of the media
+ */
+@property (copy, nonatomic) NSURL *mediaURL;
+
 @property (copy, nonatomic) UIImage *image;
 
 #pragma mark - Initialization

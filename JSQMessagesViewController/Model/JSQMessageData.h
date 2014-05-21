@@ -48,13 +48,27 @@
 - (NSDate *)date;
 
 /**
- * @return The image attached to the message
+ *  @return Preview image to display in the input text view with the NSTextAttachment
  */
-- (UIImage *)image;
+- (UIImage *)mediaAttachmentPreview;
 
 /**
- *  Sets the image so that the Collection View Layout can calulate its size. I think this method will be needed after an image is asynchronously downloaded.
+ *  @return The view to display in the message bubble
  */
-- (void)setImage:(UIImage *)image;
+- (UIView *)mediaPreview;
+
+/** 
+ *  @return The URL of the media
+ */
+- (NSURL *)mediaURL;
+
+- (UIImage *)image;
+
+@optional
+
+/**
+ * @return The size of the image to be displayed
+ */
+- (CGSize)imageSize;
 
 @end
