@@ -44,6 +44,13 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
                      [[JSQMessage alloc] initWithText:@"Oh, and there's sweet documentation." sender:self.sender date:[NSDate date]],
                      nil];
     
+    JSQMessage *imageMessage = [[JSQMessage alloc] initWithText:@" "
+                                                         sender:self.sender
+                                                           date:[NSDate date]];
+    [imageMessage setMediaURL:[NSURL URLWithString:@"http://www.telegraph.co.uk/incoming/article33812.ece/ALTERNATES/w620/Fontana_di_Trevi.jpg"]];
+    [imageMessage setExpectedMediaSize:CGSizeMake(620, 385)];
+    [self.messages addObject:imageMessage];
+    
     /**
      *  Create avatar images once.
      *
@@ -268,6 +275,29 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
     
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
     
+    if (message.mediaURL) {
+        CGFloat maximumContentWidth = self.collectionView.collectionViewLayout.itemWidth - self.collectionView.collectionViewLayout.incomingAvatarViewSize.width - self.collectionView.collectionViewLayout.messageBubbleLeftRightMargin;
+        
+        CGSize contentSize = [message expectedMediaSize];
+        
+        if (contentSize.width > maximumContentWidth) {
+            CGFloat scale = maximumContentWidth/contentSize.width;
+            contentSize = CGSizeMake(contentSize.width*scale, contentSize.height*scale);
+        }
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, contentSize.width, contentSize.height)];
+        [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[message mediaURL]]
+                                           queue:[NSOperationQueue mainQueue]
+                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                                   if (!connectionError) {
+                                       UIImage *image = [UIImage imageWithData:data];
+                                       [imageView setImage:image];
+                                   }
+                               }];
+        return imageView;
+    }
+    
+    
     if ([message.sender isEqualToString:self.sender]) {
         return [[UIImageView alloc] initWithImage:self.outgoingBubbleImageView.image
                                  highlightedImage:self.outgoingBubbleImageView.highlightedImage];
@@ -381,15 +411,15 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
     
     JSQMessage *msg = [self.messages objectAtIndex:indexPath.item];
     
-    if ([msg.sender isEqualToString:self.sender]) {
-        cell.textView.textColor = [UIColor blackColor];
-    }
-    else {
-        cell.textView.textColor = [UIColor whiteColor];
-    }
-    
-    cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
-                                          NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
+//    if ([msg.sender isEqualToString:self.sender]) {
+//        cell.textView.textColor = [UIColor blackColor];
+//    }
+//    else {
+//        cell.textView.textColor = [UIColor whiteColor];
+//    }
+//    
+//    cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
+//                                          NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     
     return cell;
 }

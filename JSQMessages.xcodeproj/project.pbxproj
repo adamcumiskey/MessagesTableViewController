@@ -484,8 +484,8 @@
 				88CC8801190A2C7F006258A0 /* FactoryTests */,
 				88BC4D3B190D8CCD002E5CC6 /* LayoutTests */,
 				88BC4D42190D8D35002E5CC6 /* ModelTests */,
-				88BC4D44190D8D35002E5CC6 /* ViewTests */,
 				885D595518CBD13D00D77BB3 /* Supporting Files */,
+				88BC4D44190D8D35002E5CC6 /* ViewTests */,
 			);
 			path = JSQMessagesTests;
 			sourceTree = "<group>";
@@ -615,7 +615,7 @@
 				ORGANIZATIONNAME = "Hexed Bits";
 				TargetAttributes = {
 					885D592818CBD13D00D77BB3 = {
-						DevelopmentTeam = 5VRJU68BZ5;
+						DevelopmentTeam = 2PG2ASWQ43;
 					};
 					885D594C18CBD13D00D77BB3 = {
 						TestTargetID = 885D592818CBD13D00D77BB3;

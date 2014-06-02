@@ -341,13 +341,23 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     }
     
     id<JSQMessageData> messageData = [self.collectionView.dataSource collectionView:self.collectionView messageDataForItemAtIndexPath:indexPath];
-    
     CGSize avatarSize = [self jsq_avatarSizeForIndexPath:indexPath];
-    
     CGFloat maximumTextWidth = self.itemWidth - avatarSize.width - self.messageBubbleLeftRightMargin;
     
-    CGFloat textInsetsTotal = [self jsq_messageBubbleTextContainerInsetsTotal];
+    if ([messageData mediaURL]) {
+        CGSize contentSize = [messageData expectedMediaSize];
+        
+        if (contentSize.width > maximumTextWidth) {
+            CGFloat scale = maximumTextWidth/contentSize.width;
+            contentSize = CGSizeMake(contentSize.width*scale, contentSize.height*scale);
+        }
+        
+        [self.messageBubbleSizes setObject:[NSValue valueWithCGSize:contentSize] forKey:indexPath];
+
+        return contentSize;
+    }
     
+    CGFloat textInsetsTotal = [self jsq_messageBubbleTextContainerInsetsTotal];
     CGRect stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth - textInsetsTotal, CGFLOAT_MAX)
                                                          options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
                                                       attributes:@{ NSFontAttributeName : self.messageBubbleFont }

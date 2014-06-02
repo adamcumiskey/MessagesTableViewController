@@ -42,6 +42,9 @@
  */
 @property (copy, nonatomic) NSDate *date;
 
+@property (copy, nonatomic) NSURL *mediaURL;
+@property (nonatomic) CGSize expectedMediaSize;
+
 #pragma mark - Initialization
 
 /**
