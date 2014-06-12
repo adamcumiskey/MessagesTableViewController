@@ -29,4 +29,6 @@
  */
 - (UIImage *)jsq_imageMaskedWithColor:(UIColor *)maskColor;
 
+- (UIImage*)jsq_maskImagewithMask:(UIImage *)maskImage;
+
 @end

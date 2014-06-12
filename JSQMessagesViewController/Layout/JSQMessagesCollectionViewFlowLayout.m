@@ -243,7 +243,7 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     
     if (self.springinessEnabled) {
         //  pad rect to avoid flickering
-        CGFloat padding = -100.0f;
+        CGFloat padding = 00.0f;
         CGRect visibleRect = CGRectInset(self.collectionView.bounds, padding, padding);
         
         NSArray *visibleItems = [super layoutAttributesForElementsInRect:visibleRect];
@@ -346,7 +346,12 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     
     if ([messageData mediaURL]) {
         CGSize contentSize = [messageData expectedMediaSize];
+        // If there is no given size, default to 200x200
+        if (CGSizeEqualToSize(contentSize, CGSizeZero)) {
+            contentSize = CGSizeMake(200, 200);
+        }
         
+        maximumTextWidth -= 10; // more padding
         if (contentSize.width > maximumTextWidth) {
             CGFloat scale = maximumTextWidth/contentSize.width;
             contentSize = CGSizeMake(contentSize.width*scale, contentSize.height*scale);

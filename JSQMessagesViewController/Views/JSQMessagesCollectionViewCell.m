@@ -113,7 +113,7 @@
     self.textView.textColor = [UIColor whiteColor];
     self.textView.editable = NO;
     self.textView.selectable = YES;
-    self.textView.userInteractionEnabled = YES;
+    self.textView.userInteractionEnabled = NO;
     self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
     self.textView.showsHorizontalScrollIndicator = NO;
     self.textView.showsVerticalScrollIndicator = NO;
